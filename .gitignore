@@ -1,0 +1,10 @@
+data/
+clips/
+models/
+out/
+*.mp4
+*.mkv
+*.pt
+*.safetensors
+__pycache__/
+*.pyc
