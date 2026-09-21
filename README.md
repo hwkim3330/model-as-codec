@@ -70,6 +70,10 @@ MIDI 파일      5 KB     소리가 아니라 "도를 0.5초, 세게" 라는 지
 | [1. 영상 — VAE latent](docs/results-01-vae-latent.md) | **진다.** x264 에게도 진다 |
 | [2. 오디오 — EnCodec](docs/results-02-audio.md) | **이긴다.** 저비트레이트에서 Opus 대비 5~15배 |
 | [3. MIDI — 중심 비유의 실측](docs/results-03-midi.md) | **압도한다.** Opus 대비 89배, 오차 0. 단 사운드폰트가 MIDI 의 2,018배 |
+| [4. 2026 코덱들](docs/results-04-sota.md) | DAC 이 전 구간에서 Opus 를 이긴다. **실험 2 의 결론 하나 정정** |
+| [5. 손익분기](docs/results-05-breakeven.md) | **순위가 뒤집힌다.** 압축률 1등이 총 전송량 꼴찌 |
+
+→ 초안: [PAPER.md](PAPER.md)
 
 ### 한 줄 요약
 
