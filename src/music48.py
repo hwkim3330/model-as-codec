@@ -20,45 +20,7 @@ import numpy as np, torch, soundfile as sf
 dev = "cuda" if torch.cuda.is_available() else "cpu"
 out = Path("out"); tmp = out/"_48"; tmp.mkdir(parents=True, exist_ok=True)
 
-# ---- 스테레오 지표 ---------------------------------------------------------
-def _stft(x, n):
-    hop = n//4; w = np.hanning(n).astype(np.float32)
-    m = 1 + (len(x)-n)//hop
-    if m < 1: return np.zeros((n//2+1,1), np.float32)
-    return np.abs(np.stack([np.fft.rfft(x[i*hop:i*hop+n]*w) for i in range(m)], 1))
-
-def _melfb(sr, n_fft, n_mels=80, fmin=20):
-    fmax = sr/2
-    h2m = lambda f: 2595*np.log10(1+f/700); m2h = lambda m: 700*(10**(m/2595)-1)
-    pts = m2h(np.linspace(h2m(fmin), h2m(fmax), n_mels+2))
-    b = np.floor((n_fft+1)*pts/sr).astype(int)
-    fb = np.zeros((n_mels, n_fft//2+1), np.float32)
-    for i in range(n_mels):
-        l,c,r = b[i],b[i+1],b[i+2]
-        if c>l: fb[i,l:c] = (np.arange(l,c)-l)/(c-l)
-        if r>c: fb[i,c:r] = (r-np.arange(c,r))/(r-c)
-    return fb
-
-def mel_st(a, b, sr, n_fft=2048, n_mels=80):
-    """채널별 mel L1 의 평균. 48 kHz 라 창을 키웠다."""
-    n = min(len(a), len(b)); a, b = a[:n], b[:n]
-    fb = _melfb(sr, n_fft, n_mels); vals = []
-    for ch in range(a.shape[1]):
-        A = np.log(fb @ _stft(a[:,ch], n_fft) + 1e-5)
-        B = np.log(fb @ _stft(b[:,ch], n_fft) + 1e-5)
-        m = min(A.shape[1], B.shape[1]); vals.append(np.abs(A[:,:m]-B[:,:m]).mean())
-    return float(np.mean(vals))
-
-def msstft_st(a, b, scales=(512,1024,2048,4096)):
-    n = min(len(a), len(b)); a, b = a[:n], b[:n]; vals=[]
-    for ch in range(a.shape[1]):
-        for s in scales:
-            A,B = _stft(a[:,ch],s), _stft(b[:,ch],s)
-            m = min(A.shape[1],B.shape[1])
-            vals.append(np.abs(A[:,:m]-B[:,:m]).mean()/(np.abs(A[:,:m]).mean()+1e-9))
-    return float(np.mean(vals))
-
-def compare(a, b, sr): return {"mel": mel_st(a,b,sr), "msstft": msstft_st(a,b)}
+from metrics48 import mel_st, msstft_st, compare
 
 def resample(x, sr_from, sr_to, tag):
     if sr_from == sr_to: return x
