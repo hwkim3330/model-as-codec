@@ -14,6 +14,8 @@
 import json, sys
 from pathlib import Path
 
+# ⚠ 이 스크립트는 체크포인트 전체를 모델 비용으로 넣는다. 수신 측은 디코더만
+#   필요하고 학습용 EMA 버퍼도 빼야 한다 -> src/breakeven2.py (실험 6) 가 정본.
 MODEL_BYTES = {          # 실제 체크포인트 크기 (fp32 safetensors)
     "encodec":  93.1e6,
     "dac":     298.7e6,
