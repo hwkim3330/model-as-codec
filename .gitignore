@@ -2,6 +2,7 @@ audio48/
 clips/
 data/
 listen/
+listen_wav/
 *.mkv
 models/
 *.mp4

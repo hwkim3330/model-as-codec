@@ -1,0 +1,579 @@
+<title>귀로 다시 재기</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600&family=IBM+Plex+Sans:wght@400;500;600;700&display=swap">
+<style>
+:root{
+  --paper:#EEF1F4; --panel:#FFFFFF; --panel2:#F7F9FA;
+  --ink:#14202B; --muted:#5B6B7A; --faint:#8798A6;
+  --rule:#C6D0D9; --rule2:#DCE3E9;
+  --signal:#0D6E6A; --signal-soft:#D6E7E6;
+  --flag:#9C4A16; --flag-soft:#F0E0D4;
+  --shadow:0 1px 2px rgba(20,32,43,.07), 0 6px 18px -10px rgba(20,32,43,.28);
+  --sans:"IBM Plex Sans",-apple-system,BlinkMacSystemFont,"Segoe UI",system-ui,sans-serif;
+  --mono:"IBM Plex Mono",ui-monospace,"SF Mono",Menlo,Consolas,monospace;
+}
+:root:not([data-theme="light"]){
+  @media (prefers-color-scheme:dark){
+    --paper:#0D1319; --panel:#16202A; --panel2:#1B2732;
+    --ink:#DDE6ED; --muted:#93A5B4; --faint:#6D8090;
+    --rule:#2A3946; --rule2:#22303C;
+    --signal:#3BA9A2; --signal-soft:#1A3634;
+    --flag:#D08A55; --flag-soft:#37271C;
+    --shadow:0 1px 2px rgba(0,0,0,.4), 0 8px 22px -12px rgba(0,0,0,.7);
+  }
+}
+:root[data-theme="dark"]{
+  --paper:#0D1319; --panel:#16202A; --panel2:#1B2732;
+  --ink:#DDE6ED; --muted:#93A5B4; --faint:#6D8090;
+  --rule:#2A3946; --rule2:#22303C;
+  --signal:#3BA9A2; --signal-soft:#1A3634;
+  --flag:#D08A55; --flag-soft:#37271C;
+  --shadow:0 1px 2px rgba(0,0,0,.4), 0 8px 22px -12px rgba(0,0,0,.7);
+}
+*{box-sizing:border-box}
+body{
+  margin:0; background:var(--paper); color:var(--ink);
+  font-family:var(--sans); font-size:15px; line-height:1.55;
+  -webkit-font-smoothing:antialiased;
+}
+.wrap{max-width:1080px; margin:0 auto; padding:32px 24px 72px; display:flex; flex-direction:column; gap:28px}
+
+/* ---------- 머리말 ---------- */
+header{display:flex; flex-direction:column; gap:10px}
+.eyebrow{
+  font-family:var(--mono); font-size:11px; letter-spacing:.14em; text-transform:uppercase;
+  color:var(--signal); font-weight:600;
+}
+h1{font-size:30px; line-height:1.15; margin:0; font-weight:600; letter-spacing:-.015em; text-wrap:balance}
+.lede{margin:0; max-width:62ch; color:var(--muted); font-size:15px}
+.lede b{color:var(--ink); font-weight:600}
+
+.brief{
+  display:grid; grid-template-columns:repeat(auto-fit,minmax(215px,1fr)); gap:1px;
+  background:var(--rule2); border:1px solid var(--rule2); border-radius:3px; overflow:hidden;
+}
+.brief div{background:var(--panel); padding:13px 15px; display:flex; flex-direction:column; gap:3px}
+.brief dt{font-family:var(--mono); font-size:10.5px; letter-spacing:.1em; text-transform:uppercase; color:var(--faint)}
+.brief dd{margin:0; font-size:13.5px; color:var(--ink)}
+
+/* ---------- 시험대 ---------- */
+.bench{background:var(--panel); border:1px solid var(--rule); border-radius:4px; box-shadow:var(--shadow)}
+.bench-head{
+  display:flex; align-items:center; gap:16px; flex-wrap:wrap;
+  padding:16px 20px; border-bottom:1px solid var(--rule2);
+}
+.trial{font-family:var(--mono); font-size:12px; color:var(--muted); letter-spacing:.04em}
+.trial b{color:var(--ink); font-weight:600}
+.clipname{font-size:19px; font-weight:600; letter-spacing:-.01em}
+.cliptag{font-family:var(--mono); font-size:11.5px; color:var(--muted)}
+.spacer{flex:1}
+
+button{font-family:inherit; font-size:inherit; cursor:pointer; color:inherit}
+button:focus-visible{outline:2px solid var(--signal); outline-offset:2px}
+.btn{
+  border:1px solid var(--rule); background:var(--panel2); color:var(--ink);
+  padding:7px 14px; border-radius:3px; font-size:13.5px; font-weight:500;
+  display:inline-flex; align-items:center; gap:7px; transition:background .12s, border-color .12s;
+}
+.btn:hover{background:var(--signal-soft); border-color:var(--signal)}
+.btn.primary{background:var(--signal); border-color:var(--signal); color:#fff; font-weight:600}
+:root[data-theme="dark"] .btn.primary, :root:not([data-theme="light"]) .btn.primary{color:#07100F}
+.btn.primary:hover{filter:brightness(1.08)}
+.btn:disabled{opacity:.42; cursor:not-allowed}
+.btn.primary:disabled:hover{filter:none}
+
+/* ---------- 페이더 뱅크 ---------- */
+.bank{display:flex; gap:0; padding:22px 20px 18px; overflow-x:auto}
+.scale{
+  flex:0 0 118px; position:relative; height:302px; margin-right:20px;
+  border-right:1px solid var(--rule2);
+}
+.band{
+  position:absolute; right:10px; left:0; display:flex; align-items:center; justify-content:flex-end;
+  gap:9px; font-family:var(--mono); font-size:10.5px; letter-spacing:.06em; text-transform:uppercase;
+  color:var(--muted);
+}
+.band span.num{color:var(--faint); font-size:10px}
+.band i{
+  position:absolute; right:-1px; width:7px; height:1px; background:var(--rule); font-style:normal;
+}
+
+.fader{
+  flex:0 0 92px; display:flex; flex-direction:column; align-items:center; gap:9px;
+  padding:0 4px;
+}
+.play{
+  width:100%; border:1px solid var(--rule); background:var(--panel2); border-radius:3px;
+  padding:6px 0; font-family:var(--mono); font-size:12px; font-weight:600; letter-spacing:.04em;
+}
+.play:hover{border-color:var(--signal); background:var(--signal-soft)}
+.play.on{background:var(--signal); border-color:var(--signal); color:#fff}
+:root[data-theme="dark"] .play.on{color:#07100F}
+
+.slot{height:216px; display:flex; align-items:center; justify-content:center; position:relative}
+input[type=range]{
+  -webkit-appearance:none; appearance:none; background:transparent;
+  width:216px; transform:rotate(-90deg); margin:0; cursor:ns-resize;
+}
+input[type=range]:focus-visible{outline:2px solid var(--signal); outline-offset:6px; border-radius:2px}
+input[type=range]::-webkit-slider-runnable-track{
+  height:5px; background:var(--rule2); border:1px solid var(--rule); border-radius:3px;
+}
+input[type=range]::-moz-range-track{
+  height:5px; background:var(--rule2); border:1px solid var(--rule); border-radius:3px;
+}
+input[type=range]::-webkit-slider-thumb{
+  -webkit-appearance:none; appearance:none; width:13px; height:30px; margin-top:-13px;
+  background:var(--panel); border:1.5px solid var(--muted); border-radius:2px;
+  box-shadow:0 1px 3px rgba(20,32,43,.3);
+}
+input[type=range]::-moz-range-thumb{
+  width:13px; height:30px; background:var(--panel); border:1.5px solid var(--muted);
+  border-radius:2px; box-shadow:0 1px 3px rgba(20,32,43,.3);
+}
+.fader.touched input[type=range]::-webkit-slider-thumb{border-color:var(--signal); background:var(--signal)}
+.fader.touched input[type=range]::-moz-range-thumb{border-color:var(--signal); background:var(--signal)}
+
+.val{
+  font-family:var(--mono); font-size:16px; font-weight:600; font-variant-numeric:tabular-nums;
+  color:var(--faint); min-width:3ch; text-align:center;
+}
+.fader.touched .val{color:var(--ink)}
+.tag{
+  font-family:var(--mono); font-size:11px; letter-spacing:.1em; color:var(--muted);
+  text-transform:uppercase;
+}
+
+.bench-foot{
+  display:flex; align-items:center; gap:14px; flex-wrap:wrap;
+  padding:14px 20px; border-top:1px solid var(--rule2); background:var(--panel2);
+  border-radius:0 0 3px 3px;
+}
+.hint{font-size:13px; color:var(--muted); max-width:52ch}
+.hint.warn{color:var(--flag)}
+
+/* ---------- 진행 ---------- */
+.dots{display:flex; gap:5px}
+.dots i{
+  width:20px; height:3px; background:var(--rule); border-radius:2px; font-style:normal;
+}
+.dots i.done{background:var(--signal)}
+.dots i.now{background:var(--ink)}
+
+/* ---------- 결과 ---------- */
+.results{display:none; flex-direction:column; gap:22px}
+.results.show{display:flex}
+.verdict{
+  background:var(--panel); border:1px solid var(--rule); border-left:3px solid var(--signal);
+  border-radius:3px; padding:18px 20px; display:flex; flex-direction:column; gap:8px;
+}
+.verdict h2{margin:0; font-size:19px; font-weight:600; letter-spacing:-.01em}
+.verdict p{margin:0; color:var(--muted); font-size:14px; max-width:64ch}
+.verdict .big{font-family:var(--mono); font-size:15px; color:var(--ink); font-weight:600}
+
+.tablewrap{overflow-x:auto; border:1px solid var(--rule); border-radius:3px; background:var(--panel)}
+table{border-collapse:collapse; width:100%; font-size:13.5px}
+caption{
+  text-align:left; padding:13px 16px 11px; font-family:var(--mono); font-size:11px;
+  letter-spacing:.1em; text-transform:uppercase; color:var(--faint); border-bottom:1px solid var(--rule2);
+}
+th,td{padding:8px 16px; text-align:right; border-bottom:1px solid var(--rule2); white-space:nowrap}
+th:first-child,td:first-child{text-align:left}
+thead th{
+  font-family:var(--mono); font-size:10.5px; letter-spacing:.08em; text-transform:uppercase;
+  color:var(--muted); font-weight:500;
+}
+tbody td{font-variant-numeric:tabular-nums; font-family:var(--mono); font-size:13px}
+tbody td:first-child{font-family:var(--sans); font-size:13.5px}
+tbody tr:last-child td{border-bottom:none}
+tr.anchor td{color:var(--flag)}
+tr.ref td{color:var(--signal)}
+td.lead{font-weight:600}
+
+.note{font-size:13px; color:var(--muted); max-width:70ch; margin:0}
+.note code{font-family:var(--mono); font-size:12px; background:var(--panel2); padding:1px 5px; border-radius:2px; border:1px solid var(--rule2)}
+
+footer{
+  border-top:1px solid var(--rule2); padding-top:18px; font-size:12.5px; color:var(--faint);
+  display:flex; flex-direction:column; gap:5px;
+}
+footer b{color:var(--muted); font-weight:500}
+
+.sync{display:flex; align-items:center; gap:9px; font-family:var(--mono); font-size:11.5px; color:var(--faint)}
+.sync i{width:6px; height:6px; border-radius:50%; background:var(--rule); font-style:normal; flex:none}
+.sync i.live{background:var(--signal)}
+
+@media (prefers-reduced-motion:reduce){*{transition:none !important; animation:none !important}}
+@media (max-width:640px){
+  .wrap{padding:22px 14px 56px}
+  h1{font-size:24px}
+  .scale{flex-basis:92px; margin-right:12px}
+  .fader{flex-basis:78px}
+}
+</style>
+
+<div class="wrap">
+
+<header>
+  <div class="eyebrow">ITU-R BS.1534 · MUSHRA</div>
+  <h1>귀로 다시 재기</h1>
+  <p class="lede">
+    신경망 오디오 코덱이 Opus 대비 얼마나 아끼는지를 쟀는데, <b>지표마다 답이 3~4배 달랐다</b>.
+    mel 은 5.7배, multi-scale STFT 는 19.3배, 사람 판단으로 학습된 CDPAM 은 5.1배라고 한다.
+    스펙트럼 거리끼리는 누가 맞는지 못 가린다. 그래서 사람이 듣는다.
+  </p>
+</header>
+
+<dl class="brief">
+  <div><dt>곡</dt><dd>48 kHz 스테레오 5곡 · 각 8초</dd></div>
+  <div><dt>조건</dt><dd>숨은 원본 + 3.5 kHz 앵커 + 코덱 5</dd></div>
+  <div><dt>순서</dt><dd>매 시행 무작위 · 이름 가림</dd></div>
+  <div><dt>걸리는 시간</dt><dd>5 시행 · 대략 8~12분</dd></div>
+</dl>
+
+<section class="bench" id="bench">
+  <div class="bench-head">
+    <div class="trial">시행 <b id="tnum">1</b> / 5</div>
+    <div>
+      <span class="clipname" id="clipname">—</span>
+      <span class="cliptag" id="cliptag"></span>
+    </div>
+    <div class="spacer"></div>
+    <button class="btn" id="refbtn">기준 원본 듣기</button>
+    <button class="btn" id="stopbtn">정지</button>
+  </div>
+
+  <div class="bank" id="bank">
+    <div class="scale" id="scale"></div>
+  </div>
+
+  <div class="bench-foot">
+    <div class="dots" id="dots"></div>
+    <div class="spacer"></div>
+    <p class="hint" id="hint">모든 페이더를 한 번씩 움직여야 다음으로 넘어간다.</p>
+    <button class="btn primary" id="next" disabled>다음 시행</button>
+  </div>
+</section>
+
+<section class="results" id="results">
+  <div class="verdict">
+    <h2 id="vhead">채점 결과</h2>
+    <p id="vbody"></p>
+    <p class="big" id="vbig"></p>
+  </div>
+
+  <div class="tablewrap">
+    <table id="meantable">
+      <caption>조건별 평균 점수 (5곡)</caption>
+      <thead><tr>
+        <th>조건</th><th>kbps</th><th>당신의 점수</th><th>mel 순위</th><th>msSTFT 순위</th><th>CDPAM 순위</th>
+      </tr></thead>
+      <tbody></tbody>
+    </table>
+  </div>
+
+  <div class="tablewrap">
+    <table id="agreetable">
+      <caption>어느 지표가 당신의 귀와 같은 순서를 내는가</caption>
+      <thead><tr>
+        <th>지표</th><th>순위 상관 (Spearman)</th><th>판정</th>
+      </tr></thead>
+      <tbody></tbody>
+    </table>
+  </div>
+
+  <p class="note">
+    <b>온전성 검사.</b> 숨은 원본에는 100 점이, 3.5 kHz 앵커에는 낮은 점수가 나와야 한다.
+    그렇지 않다면 재생 환경(블루투스 이어폰, 스피커 공진, 배경 소음)이 시험을 삼킨 것이다.
+    이 항목이 어긋난 세션은 결과에서 빼는 것이 MUSHRA 관례다.
+  </p>
+
+  <div style="display:flex; gap:12px; flex-wrap:wrap; align-items:center">
+    <button class="btn" id="again">다시 하기</button>
+    <div class="sync" id="sync"><i></i><span>기록 안 함</span></div>
+  </div>
+</section>
+
+<footer>
+  <div><b>재생 조건.</b> 유선 헤드폰 권장. 블루투스는 자체 코덱(SBC/AAC)이 한 번 더 손실을 얹으므로 결과를 못 쓴다.</div>
+  <div><b>조건 정체.</b> Opus 16k · Opus 32k · EnCodec 48kHz 6kbps · EnCodec 48kHz 24kbps · DAC 44.1kHz nq=9 · 3.5 kHz 저역통과 앵커 · 숨은 원본.</div>
+  <div>측정 스크립트와 전체 기록은 <b>hwkim3330/model-as-codec</b> 의 <b>docs/results-10-perceptual.md</b> 에 있다.</div>
+</footer>
+
+</div>
+
+<script>
+// 고역 에너지가 승패를 가르는 축이라, 1% 부터 50% 까지 넓게 덮도록 골랐다.
+const CLIPS = [
+  {id:"piano",  name:"피아노 왈츠",   tag:"3.5 kHz 이상 에너지 1%"},
+  {id:"latin",  name:"라틴",          tag:"13%"},
+  {id:"game",   name:"게임 BGM",      tag:"17%"},
+  {id:"sax",    name:"색소폰·트롬본",  tag:"39%"},
+  {id:"vocal",  name:"아카펠라",       tag:"50%"}
+];
+const CONDS = [
+  {id:"reference",    label:"숨은 원본",        kbps:null},
+  {id:"anchor35",     label:"3.5 kHz 앵커",     kbps:null},
+  {id:"opus16",       label:"Opus 16k",         kbps:17.3},
+  {id:"opus32",       label:"Opus 32k",         kbps:35.2},
+  {id:"encodec48_6",  label:"EnCodec48 6",      kbps:6.6},
+  {id:"encodec48_24", label:"EnCodec48 24",     kbps:26.4},
+  {id:"dac44_9",      label:"DAC44 nq=9",       kbps:15.5}
+];
+// 실측 지표. out/music48.json, out/cdpam_sweep.json 에서 뽑았다. 작을수록 좋음.
+const METRICS = {
+ piano:{opus16:[0.504,1.402,0.0200],opus32:[0.255,0.873,0.0137],encodec48_6:[0.757,1.556,0.0427],encodec48_24:[0.665,1.391,0.0349],dac44_9:[0.425,1.027,0.0154],anchor35:[0.337,0.782,0.0098]},
+ latin:{opus16:[0.780,1.829,0.0136],opus32:[0.379,1.336,0.0814],encodec48_6:[0.372,1.238,0.0415],encodec48_24:[0.282,1.089,0.0490],dac44_9:[0.228,0.939,0.0278],anchor35:[0.783,1.465,0.0401]},
+ game:{opus16:[0.467,1.147,0.0215],opus32:[0.326,0.972,0.0261],encodec48_6:[0.941,1.807,0.0423],encodec48_24:[0.877,1.704,0.0350],dac44_9:[0.410,1.078,0.0285],anchor35:[0.202,0.698,0.1214]},
+ sax:{opus16:[0.492,1.541,0.0519],opus32:[0.422,1.403,0.0841],encodec48_6:[0.403,1.180,0.0875],encodec48_24:[0.332,1.075,0.0695],dac44_9:[0.273,0.939,0.1155],anchor35:[0.895,1.743,0.5070]},
+ vocal:{opus16:[0.553,1.682,0.0975],opus32:[0.469,1.587,0.0535],encodec48_6:[0.488,1.454,0.0657],encodec48_24:[0.392,1.309,0.0586],dac44_9:[0.371,1.228,0.2083],anchor35:[0.873,1.908,0.5203]}
+};
+const BANDS = [["Excellent",100,80],["Good",80,60],["Fair",60,40],["Poor",40,20],["Bad",20,0]];
+
+const $ = s => document.querySelector(s);
+const bank = $("#bank"), scaleEl = $("#scale");
+let trial = 0, order = [], ratings = [], audios = {}, playing = null, dbRef = null;
+
+// 품질 척도 레일
+BANDS.forEach(([label, hi, lo]) => {
+  const d = document.createElement("div");
+  d.className = "band";
+  d.style.top = (302 * (100 - (hi + lo) / 2) / 100 - 8) + "px";
+  d.innerHTML = '<span>' + label + '</span><span class="num">' + lo + '–' + hi + '</span><i></i>';
+  scaleEl.appendChild(d);
+});
+
+function shuffled(a){
+  const x = a.slice();
+  for (let i = x.length - 1; i > 0; i--){
+    const j = Math.floor(Math.random() * (i + 1));
+    [x[i], x[j]] = [x[j], x[i]];
+  }
+  return x;
+}
+
+function stopAll(){
+  Object.values(audios).forEach(a => { a.pause(); });
+  document.querySelectorAll(".play.on").forEach(b => b.classList.remove("on"));
+  playing = null;
+}
+
+function play(key, btn){
+  const pos = playing && audios[playing] ? audios[playing].currentTime : 0;
+  const wasSame = playing === key;
+  stopAll();
+  if (wasSame) return;
+  const a = audios[key];
+  if (!a) return;
+  // MUSHRA 관례: 조건을 바꿔도 재생 위치를 유지해 같은 구간을 비교한다
+  try { a.currentTime = Math.min(pos, Math.max(0, (a.duration || 10) - 0.05)); } catch (e) {}
+  a.loop = true;
+  a.play().catch(() => {});
+  btn.classList.add("on");
+  playing = key;
+}
+
+function buildTrial(){
+  stopAll();
+  const clip = CLIPS[trial];
+  $("#tnum").textContent = trial + 1;
+  $("#clipname").textContent = clip.name;
+  $("#cliptag").textContent = clip.tag;
+  bank.querySelectorAll(".fader").forEach(n => n.remove());
+  audios = {};
+
+  const ref = new Audio("audio/" + clip.id + "__reference.wav");
+  ref.preload = "auto"; audios["__ref"] = ref;
+
+  order = shuffled(CONDS);
+  order.forEach((c, i) => {
+    const letter = String.fromCharCode(65 + i);
+    const f = document.createElement("div");
+    f.className = "fader";
+    f.innerHTML =
+      '<button class="play" data-k="' + c.id + '">' + letter + '</button>' +
+      '<div class="slot"><input type="range" min="0" max="100" value="50" ' +
+      'aria-label="조건 ' + letter + ' 점수"></div>' +
+      '<div class="val">–</div>' +
+      '<div class="tag">' + letter + '</div>';
+    bank.appendChild(f);
+
+    const a = new Audio("audio/" + clip.id + "__" + c.id + ".wav");
+    a.preload = "auto"; audios[c.id] = a;
+
+    const btn = f.querySelector(".play");
+    btn.addEventListener("click", () => play(c.id, btn));
+
+    const sl = f.querySelector("input");
+    const val = f.querySelector(".val");
+    const mark = () => {
+      f.classList.add("touched");
+      val.textContent = sl.value;
+      checkReady();
+    };
+    sl.addEventListener("input", mark);
+    sl.addEventListener("change", mark);
+  });
+
+  $("#next").disabled = true;
+  $("#next").textContent = trial === CLIPS.length - 1 ? "채점하기" : "다음 시행";
+  $("#hint").className = "hint";
+  $("#hint").textContent = "모든 페이더를 한 번씩 움직여야 다음으로 넘어간다.";
+  drawDots();
+}
+
+function checkReady(){
+  const fs = [...bank.querySelectorAll(".fader")];
+  const done = fs.every(f => f.classList.contains("touched"));
+  $("#next").disabled = !done;
+  if (done) $("#hint").textContent = "모두 매겼다. 넘어가도 좋다.";
+}
+
+function drawDots(){
+  const d = $("#dots"); d.innerHTML = "";
+  CLIPS.forEach((_, i) => {
+    const s = document.createElement("i");
+    s.className = i < trial ? "done" : (i === trial ? "now" : "");
+    d.appendChild(s);
+  });
+}
+
+$("#refbtn").addEventListener("click", () => {
+  const b = $("#refbtn");
+  if (playing === "__ref"){ stopAll(); b.classList.remove("on"); return; }
+  play("__ref", b);
+});
+$("#stopbtn").addEventListener("click", stopAll);
+
+$("#next").addEventListener("click", () => {
+  const fs = [...bank.querySelectorAll(".fader")];
+  const row = { clip: CLIPS[trial].id, scores: {} };
+  order.forEach((c, i) => { row.scores[c.id] = +fs[i].querySelector("input").value; });
+  ratings.push(row);
+  stopAll();
+  trial++;
+  if (trial < CLIPS.length) buildTrial();
+  else score();
+});
+
+$("#again").addEventListener("click", () => {
+  trial = 0; ratings = [];
+  $("#results").classList.remove("show");
+  $("#bench").style.display = "";
+  buildTrial();
+  window.scrollTo({ top: 0, behavior: "smooth" });
+});
+
+// ---- 채점 -------------------------------------------------------------
+function rankOf(arr){                       // 작을수록 좋은 값 -> 1등부터
+  const idx = arr.map((v, i) => [v, i]).sort((a, b) => a[0] - b[0]);
+  const r = new Array(arr.length);
+  idx.forEach(([, i], k) => r[i] = k + 1);
+  return r;
+}
+function spearman(a, b){
+  const n = a.length;
+  if (n < 3) return NaN;
+  const ra = rankOf(a), rb = rankOf(b);
+  const ma = (n + 1) / 2, mb = ma;
+  let num = 0, da = 0, db = 0;
+  for (let i = 0; i < n; i++){
+    num += (ra[i] - ma) * (rb[i] - mb);
+    da += (ra[i] - ma) ** 2; db += (rb[i] - mb) ** 2;
+  }
+  return num / Math.sqrt(da * db);
+}
+
+function score(){
+  $("#bench").style.display = "none";
+  $("#results").classList.add("show");
+
+  const scored = CONDS.filter(c => c.id !== "reference");
+  const mean = {}, mel = {}, mss = {}, cdp = {};
+  CONDS.forEach(c => {
+    mean[c.id] = ratings.reduce((s, r) => s + r.scores[c.id], 0) / ratings.length;
+  });
+  scored.forEach(c => {
+    mel[c.id] = ratings.reduce((s, r) => s + METRICS[r.clip][c.id][0], 0) / ratings.length;
+    mss[c.id] = ratings.reduce((s, r) => s + METRICS[r.clip][c.id][1], 0) / ratings.length;
+    cdp[c.id] = ratings.reduce((s, r) => s + METRICS[r.clip][c.id][2], 0) / ratings.length;
+  });
+
+  const ids = scored.map(c => c.id);
+  // 사람 점수는 클수록 좋고 지표는 작을수록 좋다 -> 부호를 뒤집어 맞춘다
+  const human = ids.map(i => -mean[i]);
+  const corr = {
+    mel:    spearman(human, ids.map(i => mel[i])),
+    msstft: spearman(human, ids.map(i => mss[i])),
+    cdpam:  spearman(human, ids.map(i => cdp[i]))
+  };
+
+  const rMel = rankOf(ids.map(i => mel[i]));
+  const rMss = rankOf(ids.map(i => mss[i]));
+  const rCdp = rankOf(ids.map(i => cdp[i]));
+
+  const tb = $("#meantable").querySelector("tbody"); tb.innerHTML = "";
+  const best = Math.max(...ids.map(i => mean[i]));
+  CONDS.forEach(c => {
+    const tr = document.createElement("tr");
+    const k = ids.indexOf(c.id);
+    if (c.id === "anchor35") tr.className = "anchor";
+    if (c.id === "reference") tr.className = "ref";
+    tr.innerHTML =
+      "<td>" + c.label + "</td>" +
+      "<td>" + (c.kbps ? c.kbps.toFixed(1) : "–") + "</td>" +
+      '<td class="' + (mean[c.id] === best ? "lead" : "") + '">' + mean[c.id].toFixed(1) + "</td>" +
+      "<td>" + (k < 0 ? "–" : rMel[k]) + "</td>" +
+      "<td>" + (k < 0 ? "–" : rMss[k]) + "</td>" +
+      "<td>" + (k < 0 ? "–" : rCdp[k]) + "</td>";
+    tb.appendChild(tr);
+  });
+
+  const at = $("#agreetable").querySelector("tbody"); at.innerHTML = "";
+  const named = { mel: "mel 거리", msstft: "multi-scale STFT", cdpam: "CDPAM" };
+  const best_m = Object.entries(corr).sort((a, b) => b[1] - a[1])[0][0];
+  Object.entries(corr).forEach(([k, v]) => {
+    const tr = document.createElement("tr");
+    tr.innerHTML = "<td>" + named[k] + "</td><td>" + (isNaN(v) ? "–" : v.toFixed(2)) +
+      '</td><td class="' + (k === best_m ? "lead" : "") + '">' +
+      (k === best_m ? "당신의 귀에 가장 가깝다" : "") + "</td>";
+    at.appendChild(tr);
+  });
+
+  const refScore = mean["reference"], ancScore = mean["anchor35"];
+  const clean = refScore >= 90 && ancScore <= refScore - 20;
+  $("#vhead").textContent = clean ? "쓸 수 있는 세션이다" : "이 세션은 의심스럽다";
+  $("#vbody").textContent = clean
+    ? "숨은 원본을 " + refScore.toFixed(0) + "점, 3.5 kHz 앵커를 " + ancScore.toFixed(0) +
+      "점으로 매겼다. 통제군이 제자리에 있으므로 아래 순위를 읽어도 된다."
+    : "숨은 원본 " + refScore.toFixed(0) + "점, 앵커 " + ancScore.toFixed(0) +
+      "점. 원본이 90점 이상, 앵커가 그보다 20점 이상 낮아야 정상이다. " +
+      "재생 환경이나 집중도를 의심할 것 — MUSHRA 관례상 이런 세션은 뺀다.";
+  $("#vbig").textContent = named[best_m] + " 가 당신의 순서와 가장 잘 맞는다 (ρ = " +
+    corr[best_m].toFixed(2) + ").";
+
+  save({ ratings: ratings, mean: mean, corr: corr, clean: clean, at: new Date().toISOString() });
+}
+
+// ---- 기록 (있으면) ----------------------------------------------------
+claude.use("db").then(db => {
+  dbRef = db;
+  if (!db) return;
+  const s = $("#sync");
+  s.querySelector("i").className = "live";
+  s.querySelector("span").textContent = "세션 기록됨";
+}).catch(() => {});
+
+function save(payload){
+  if (!dbRef) return;
+  dbRef.collection("sessions").add(payload).then(() => {
+    const s = $("#sync");
+    s.querySelector("i").className = "live";
+    s.querySelector("span").textContent = "세션 저장 완료";
+  }).catch(() => {
+    const s = $("#sync");
+    s.querySelector("span").textContent = "저장 실패 — 결과는 위에 그대로 있다";
+  });
+}
+
+buildTrial();
+</script>

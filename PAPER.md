@@ -143,11 +143,13 @@ EnCodec48 이 둘 다인 칸이 많기 때문이다.
 | [7. int8 실측](docs/results-07-int8-decoder.md) | 저하 11% 미만. **양자화가 3번 안 먹었다** |
 | [8. 진짜 음악](docs/results-08-real-music.md) | 곡에 따라 6배 갈린다 |
 | [9. 48 kHz 스테레오](docs/results-09-music-48k.md) | **배수 정정, 역전은 일반 법칙 아님** |
+| [10. 지표를 심판대에](docs/results-10-perceptual.md) | **앵커가 내 msSTFT 를 즉사시켰다.** 사람 기준 최종 5.1x / 3.3x + 청취 시험 페이지 |
 
 ## 아직 하지 않은 것
 
-- [ ] **청취 평가.** 결과 7 이 이걸 가장 아프게 만든다. 지금 모든 배수가
-      단일 스펙트럼 지표에 매달려 있다. 이게 제일 큰 구멍이다
+- [ ] **청취 평가.** 시험은 만들어 뒀다 —
+      [귀로 다시 재기](https://claude.ai/code/artifact/85074fb5-1c44-48c3-a296-7f21a04385ca)
+      (MUSHRA, 숨은 원본 + 3.5 kHz 앵커, 5곡). **사람이 아직 안 돌렸다.**
 - [ ] L3TC 와 Practical Kolmogorov optimality 원문 확보해 대조
 - [ ] DCVC 계열 영상 코덱으로 같은 계산
 - [ ] 여러 작업을 공유하는 모델의 비용 배분을 어떻게 볼 것인가
