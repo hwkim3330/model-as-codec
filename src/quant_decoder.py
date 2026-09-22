@@ -204,14 +204,14 @@ else:
 # 위에서 기준 Opus 가 한 칸도 안 바뀌었다. 그게 'int8 이 무해해서' 인지
 # 'Opus 격자(6/12/24/48k)가 성겨서' 인지 갈라야 한다.
 print("\n=== 이 검증의 분해능 ===\n")
-for clip in ["speech", "mixed", "ambient"]:
+for clip in ["speech", "mixed", "ambient", "music", "musicld"]:
     op = sorted([x for x in sota if x["clip"] == clip and x["method"] == "opus"],
                 key=lambda x: x["kbps"])
     steps = [abs(b["mel"] - a["mel"]) for a, b in zip(op, op[1:])]
     dmax = max(r["d_wc"] for r in rows if r["clip"] == clip)
     print(f"  {clip:<8} Opus 이웃 설정 간 mel 간격 {min(steps):.3f}~{max(steps):.3f}"
           f"  |  int8 최대 저하 {dmax:+.4f}")
-allsteps = [abs(b["mel"]-a["mel"]) for clip in ["speech","mixed","ambient"]
+allsteps = [abs(b["mel"]-a["mel"]) for clip in ["speech","mixed","ambient","music","musicld"]
             for a, b in zip(sorted([x for x in sota if x["clip"]==clip and x["method"]=="opus"],
                                    key=lambda x: x["kbps"]),
                             sorted([x for x in sota if x["clip"]==clip and x["method"]=="opus"],

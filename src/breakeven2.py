@@ -34,7 +34,7 @@ SCEN = [
 
 def pairs():
     """클립x코덱마다 (가장 싼 신경망 설정, 같은 품질의 가장 싼 opus) 를 찾는다."""
-    for clip in ["speech", "mixed", "ambient"]:
+    for clip in ["speech", "mixed", "ambient", "music", "musicld"]:
         opus = [x for x in audio if x["clip"] == clip and x["method"] == "opus"]
         for meth in ["mimi", "dac", "encodec"]:
             ms = [x for x in audio if x["clip"] == clip and x["method"] == meth]
@@ -73,7 +73,7 @@ json.dump(rows, open("out/breakeven2.json", "w"), indent=1)
 
 print("\n\n=== 순위가 뒤집히는가? ===\n")
 for scen, _ in SCEN:
-    for clip in ["speech", "mixed", "ambient"]:
+    for clip in ["speech", "mixed", "ambient", "music", "musicld"]:
         rs = [r for r in rows if r["clip"] == clip]
         if len(rs) < 2: continue
         by_ratio = [r["codec"] for r in sorted(rs, key=lambda r: -r["ratio"])]
@@ -99,5 +99,5 @@ if enc:
     print(f"  같은 실험인데 손익분기가 {lo:.1f}시간 ~ {hi:.1f}시간, {hi/lo:.0f}배 벌어진다.")
     print("  '신경망 코덱이 실용적이냐'는 질문의 답은 배포 조건에 전적으로 달려 있고,")
     print("  압축률만 보고하는 표로는 답할 수 없다.")
-    print(f"  다만 **순위 역전은 시나리오 {len(SCEN)}개 x 클립 3개 = {len(SCEN)*3}칸 전부에서 살아남는다.**")
+    print(f"  다만 **순위 역전은 시나리오 {len(SCEN)}개 x 클립 5개 = {len(SCEN)*5}칸 전부에서 살아남는다.**")
 print()
