@@ -16,6 +16,8 @@ fp32 합이 on-disk 크기와 정확히 맞는다 (93.1 / 384.6 / 298.6 MB).
 import json
 from pathlib import Path
 
+# 주의: 이 json 은 quant_decoder.py 의 버킷 감사에서 mimi downsample(인코더)/
+# upsample(디코더) 을 갈라 고친 판이다. 다시 만들 땐 그 분류를 유지할 것.
 split = json.load(open("out/model_split.json"))
 audio = json.load(open("out/audio_sota.json"))
 

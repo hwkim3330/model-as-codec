@@ -73,6 +73,7 @@ MIDI 파일      5 KB     소리가 아니라 "도를 0.5초, 세게" 라는 지
 | [4. 2026 코덱들](docs/results-04-sota.md) | DAC 이 전 구간에서 Opus 를 이긴다. **실험 2 의 결론 하나 정정** |
 | [5. 손익분기](docs/results-05-breakeven.md) | **순위가 뒤집힌다.** 압축률 1등이 총 전송량 꼴찌 |
 | [6. 디코더만 세기](docs/results-06-decoder-breakeven.md) | 역전은 12칸 전부에서 유지. 단 손익분기는 배포 조건에 따라 **61배** 벌어진다 (1.3h~76.1h) |
+| [7. int8 디코더 실측](docs/results-07-int8-decoder.md) | 저하 최악 +0.0285 mel = 코덱 자체 손실의 11% 미만. **첫 판은 양자화가 43%밖에 안 먹었는데 그럴듯한 숫자가 나왔다** |
 
 → 초안: [PAPER.md](PAPER.md)
 
